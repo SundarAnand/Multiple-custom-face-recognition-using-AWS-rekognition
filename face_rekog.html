@@ -1,0 +1,84 @@
+ 
+<html>
+<head>
+    <title>
+        FACE REKOG
+    </title>
+    <style>
+        div.a{
+          font-size: 200%;
+        }
+     </style>
+</head>
+<body>
+<br><br><br><br>
+<center>
+<div id="img"></div>
+<br><br><br>
+
+<div id="Name" class="a"></div>
+</center>
+
+    <script>
+        
+        var img_link;
+        var bucket;
+        var filename;
+        var Name;
+        var i;
+        //var Names = [];
+        var Namelist="";
+
+        window.setInterval(function () {
+            LoadValues()
+        }, 2000);
+        
+
+        function LoadValues() {
+            
+	        var xhttp = new XMLHttpRequest();
+            i;
+            Namelist="";
+            xhttp.onreadystatechange = function () {
+                    //alert(this.status);
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.responseText);
+                    //alert("hello");
+                    //alert(response.Items);
+                    for(i in response.Items){
+                    //Names[i]=response.Items[i].FullName;
+                    //alert(response.Items[i].FullName);
+                    if(i==0){
+                        Namelist = Namelist + response.Items[0].FullName;
+                        //alert("Hello");
+                    }
+                    if(i>0 && response.Items[0].key==response.Items[i].key){
+                        Namelist= Namelist + ", " + response.Items[i].FullName;
+                    }
+                    //alert(response.Items[i].FullName);
+                    //alert(Namelist);
+                    }
+                    document.getElementById("Name").innerHTML= "Name : " + Namelist;
+                    bucket=response.Items[0].bucket;
+                    key=response.Items[0].key;
+                    img_link="https://s3.us-east-2.amazonaws.com/" + bucket + "/" + key;
+                
+                    
+                    //alert(response.Items[0]);
+                    document.getElementById("img").innerHTML="<img src='" + img_link + "' height='420' width='500'>";
+                    
+                    
+                }
+            }	        	
+           xhttp.open("GET", "<Your link>", true);
+           xhttp.send();
+
+                
+        }
+            
+        
+    </script>
+
+</body>
+
+</html>
